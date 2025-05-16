@@ -15,8 +15,24 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.BLUETOOTH",
+        "android.permission.BLUETOOTH_ADMIN",
+        "android.permission.BLUETOOTH_CONNECT"
+      ],
+      "package": "com.be.scanner",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAz2qv6BbyoWyEzFlo4e9AlHjch4nv7Ykg"
+        }
       }
     },
+    "permissions": [
+      "LOCATION"
+    ],
     "web": {
       "bundler": "metro",
       "output": "static",
@@ -32,10 +48,29 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      [ 
+        "expo-image-picker",        
+        {  "photosPermission": "The app accesses your photos to let you share them with your friends." }      
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
+        }
+      ],
+      "react-native-ble-plx"
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "127fb208-b131-4308-b305-4ba1da8a2ee2"
+      }
     }
   }
 }

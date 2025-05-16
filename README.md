@@ -1,50 +1,101 @@
-# Welcome to your Expo app 👋
+# 🌱 EcoCache – Sustainability Adventure App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**EcoCache** is a mobile adventure app that combines **BLE beacons**, **QR scanning**, **maps**, and **gamification** to encourage eco-friendly exploration.  
+Built with **React Native** and **Expo**, it offers a fun, interactive, and educational way to engage with real-world environments.
 
-## Get started
+---
 
-1. Install dependencies
+## 🚀 Features
 
-   ```bash
-   npm install
-   ```
+- 📍 Real-time map with beacon and location markers (`react-native-maps`, `expo-location`, `geolib`)
+- 📡 BLE beacon detection for proximity-based feedback (`react-native-ble-plx`)
+- 📷 QR code scanning and image capture (`expo-camera`, `expo-image-picker`)
+- 🎮 Gamified exploration with point-based rewards
+- 🔒 Secure local storage with `expo-secure-store`
+- 🧭 Navigation powered by `expo-router` (file-based routing)
+- 💥 Haptic feedback using `expo-haptics`
+- 🌐 WebView integration for displaying location content
+- 🧪 Jest testing support with `jest-expo`
+- checkbox
+- >npm install react-native-paper react-native-vector-icons
 
-2. Start the app
+---
 
-   ```bash
-    npx expo start
-   ```
+## ⚙️ Getting Started
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+### Install dependencies
 
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
-## Learn more
+## 📱 Android APK Build
 
-To learn more about developing your project with Expo, look at the following resources:
+This project supports native Android builds via **Expo Application Services (EAS)**.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### 🔽 Download Latest APK
 
-## Join the community
+You can install the latest build directly by visiting the following link:
 
-Join our community of developers creating universal apps.
+> [📦 Download Android APK](https://expo.dev/accounts/3181182997/projects/my-first-native-app/builds/ad5b82ee-d67e-413e-8583-d28a49ca3fa4)
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+1. Open the link on your Android phone
+2. Tap **"Download"** to save the `.apk` file
+3. Open the file to install it
+
+> ⚠️ **Note**: You may need to enable _"Install from unknown sources"_ in your device settings to install the app.
+
+---
+
+### 🔐 Expo Account Access (optional)
+
+If you need to access additional build details or future builds, please log in to [https://expo.dev](https://expo.dev) with the appropriate Expo account.
+
+- **Account ID**: `3181182997`
+- **PassWord**:`laolvzi123`
+
+
+
+▶️ **Run the App (Using Dev Client APK)**
+This project uses a custom Development Client built with **EAS** to support native modules like **BLE**.
+
+🖥 **On your Windows computer**
+Ensure your computer and Android device are on the same Wi-Fi network
+
+Start the local development server:
+
+```bash
+npx expo start
+```
+
+A QR code will appear in your terminal or browser
+
+📱 **On your Android device**
+📦 **Download and install the Dev APK**
+
+Open the installed app (which includes expo-dev-client)
+Scan the QR code displayed from your development server
+The app will load directly from your local machine
+⚠️ Make sure to enable "Install from Unknown Sources" in your Android settings before installing the APK.
+
+
+## 🔒 Required Permissions
+
+Make sure the app has the following permissions enabled:
+
+- **Location access (foreground)** – for detecting nearby beacons and showing map
+- **Camera access** – for scanning QR codes
+- **Bluetooth access** – for BLE scanning (Android 12+ requires special handling)
+- **Media Library access** – for saving or uploading images
+
+You may also need to manually allow these in Android system settings.
+
+
+⚠️ **Known Issues / Limitations**
+- ✅ **Android only**: The project currently supports Android; iOS is not yet implemented.
+- 🚫 **BLE features require physical devices**: Simulators/emulators do not support Bluetooth.
+- 📦 **No iOS build**: Requires Apple Developer credentials and EAS configuration (not included here).
+
+
+
