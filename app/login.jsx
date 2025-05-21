@@ -1,172 +1,246 @@
-// React and React Native imports
-import { useState } from "react";
+/**
+ * LoginScreen - Login page for EcoCache app.
+ * 
+ * Features:
+ * - Username and password input
+ * - Animated loading state
+ * - Snackbar for feedback
+ * - Navigation to SignUp page
+ * - Quick guide section
+ */
+
+import React, { useState } from "react";
 import {
   View,
-  Text,
+  StyleSheet,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
+import {
   TextInput,
   Button,
-  StyleSheet,
-  Alert,
+  Card,
+  Title,
+  Paragraph,
   ActivityIndicator,
-  ScrollView,
-} from "react-native";
-
-// Import authentication and user-related API functions
+  Text,
+  Snackbar,
+  useTheme,
+} from "react-native-paper";
 import { signInUser } from "../api/auth";
 import { getUserInfo } from "../api/api";
-
-// Navigation hook from Expo Router
 import { useRouter } from "expo-router";
+import LottieView from "lottie-react-native";
 
 /**
- * LoginScreen component - allows users to log in and navigate to other parts of the app.
- * Includes input validation, error handling, and a user guide section.
+ * LoginScreen - Handles user login and authentication
  */
 export default function LoginScreen() {
-  // State for form fields and loading state
+  /** User input: username and password */
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();// Navigation object
 
-   /**
-   * Handles login logic:
-   * - Validates input
-   * - Calls backend API to authenticate
-   * - On success, fetches user info and redirects to home
-   * - On failure, shows an error alert
+  /** Loading state while logging in */
+  const [loading, setLoading] = useState(false);
+
+  /** Snackbar for error/success messages */
+  const [snackbar, setSnackbar] = useState({ visible: false, message: "" });
+
+  /** Navigation router */
+  const router = useRouter();
+  const theme = useTheme();
+
+  /**
+   * handleLogin - Triggered when login button is pressed
+   * Calls login API, fetches user info, and redirects on success
    */
   const handleLogin = async () => {
     if (!username || !password) {
-      Alert.alert("Missing Fields", "Please fill in both username and password.");
+      setSnackbar({ visible: true, message: "Please fill in both fields." });
       return;
     }
 
-    setLoading(true);// Show spinner
+    setLoading(true);
 
     try {
       await signInUser({ username, password });
-      const userInfo = await getUserInfo(); // Fetch user data
-
+      const userInfo = await getUserInfo();
       if (userInfo) {
-        Alert.alert("Login Successful", `Welcome back, ${userInfo.username}!`);
-        router.replace("/"); // Redirect to home page
+        setSnackbar({ visible: true, message: `Welcome back, ${userInfo.username}!` });
+        setTimeout(() => router.replace("/"), 1000);
       } else {
         throw new Error("Failed to retrieve user info");
       }
     } catch (err) {
-      Alert.alert("Login Failed", err.message || "Invalid username or password.");
+      setSnackbar({ visible: true, message: err.message || "Login failed." });
     } finally {
-      setLoading(false); // Hide spinner
+      setLoading(false);
     }
   };
 
   return (
-  <ScrollView contentContainerStyle={styles.container}>
-    <View style={styles.card}>
-      <Text style={styles.title}>🔐 Log In to EcoCache</Text>
+    <ScrollView contentContainerStyle={styles.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        style={{ width: "100%" }}
+      >
+        {/* Main login card */}
+        <Card style={styles.card} elevation={4}>
+          <Card.Content>
+            <Title style={styles.title}>🔐 Log In to EcoCache</Title>
 
-      <TextInput
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        style={styles.input}
-      />
+            <TextInput
+              label="Username"
+              mode="outlined"
+              value={username}
+              onChangeText={setUsername}
+              style={styles.input}
+              left={<TextInput.Icon icon="account" />}
+            />
+            <TextInput
+              label="Password"
+              mode="outlined"
+              secureTextEntry
+              value={password}
+              onChangeText={setPassword}
+              style={styles.input}
+              left={<TextInput.Icon icon="lock" />}
+            />
 
-      {loading ? (
-        <ActivityIndicator size="large" color="#4CAF50" style={{ marginVertical: 20 }} />
-      ) : (
-        <Button title="Log In" onPress={handleLogin} color="#388e3c" />
-      )}
+            {/* Loading animation or login button */}
+            {loading ? (
+              <View style={styles.loadingContainer}>
+                <LottieView
+                  source={require("../assets/animations/plant.json")}
+                  autoPlay
+                  loop
+                  style={styles.loadingAnimation}
+                />
+                <Text style={styles.loadingText}>🌱 Growing your green world...</Text>
+              </View>
+            ) : (
+              <Button
+                icon="leaf"
+                mode="contained"
+                onPress={handleLogin}
+                style={styles.loginButton}
+                labelStyle={{ fontSize: 16 }}
+              >
+                Log In
+              </Button>
+            )}
 
-      <View style={{ marginTop: 16 }}>
-        <Text style={{ marginBottom: 6 }}>Don't have an account?</Text>
-        <Button
-          title="Create Account"
-          onPress={() => router.push("/signup")}
-          color="#1976D2"
-        />
-      </View>
-    </View>
+            {/* Sign up navigation */}
+            <Button
+              mode="text"
+              onPress={() => router.push("/signup")}
+              style={styles.signupLink}
+              labelStyle={{ color: "#2e7d32", fontWeight: "600" }}
+            >
+              Don't have an account? Create one
+            </Button>
+          </Card.Content>
+        </Card>
 
-    <View style={styles.guide}>
-      <Text style={styles.guideTitle}>🌍 How to Use EcoCache</Text>
-      <Text style={styles.guideText}>• Create an account or log in.</Text>
-      <Text style={styles.guideText}>• Explore the map and look for beacons.</Text>
-      <Text style={styles.guideText}>• Scan beacons in real-world locations.</Text>
-      <Text style={styles.guideText}>• Earn points and rank on the leaderboard!</Text>
-    </View>
-  </ScrollView>
-);
+        {/* Instructional guide card */}
+        <Card style={styles.guideCard}>
+          <Card.Content>
+            <Title style={styles.guideTitle}>🌍 How to Use EcoCache</Title>
+            <Paragraph style={styles.guideText}>• Create an account or log in.</Paragraph>
+            <Paragraph style={styles.guideText}>• Explore the map and look for beacons.</Paragraph>
+            <Paragraph style={styles.guideText}>• Scan beacons in real-world locations.</Paragraph>
+            <Paragraph style={styles.guideText}>• Earn points and rank on the leaderboard!</Paragraph>
+          </Card.Content>
+        </Card>
+      </KeyboardAvoidingView>
 
+      {/* Snackbar feedback */}
+      <Snackbar
+        visible={snackbar.visible}
+        onDismiss={() => setSnackbar({ visible: false, message: "" })}
+        duration={2000}
+        action={{ label: "OK", onPress: () => {} }}
+        style={{ backgroundColor: theme.colors.error }}
+      >
+        {snackbar.message}
+      </Snackbar>
+    </ScrollView>
+  );
 }
 
+/**
+ * Styles for the login screen layout and UI components
+ */
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    alignItems: "center",
+    backgroundColor: "#f1f8e9",
     flexGrow: 1,
-    backgroundColor: "#e0f2f1",
+    alignItems: "center",
+    justifyContent: "center",
   },
   card: {
     width: "100%",
-    backgroundColor: "#ffffff",
-    padding: 20,
     borderRadius: 16,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
-    marginTop: 40,
     marginBottom: 20,
+    backgroundColor: "#ffffff",
   },
   title: {
     fontSize: 24,
-    fontWeight: "bold",
-    color: "#1b5e20",
-    marginBottom: 20,
+    marginBottom: 16,
     textAlign: "center",
+    color: "#1b5e20",
+    fontWeight: "bold",
   },
   input: {
-    width: "100%",
-    padding: 12,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 10,
     marginBottom: 12,
-    backgroundColor: "#fefefe",
+    backgroundColor: "#f9fbe7",
+    borderRadius: 8,
   },
-  guide: {
-    marginTop: 10,
+  loginButton: {
+    marginTop: 12,
+    backgroundColor: "#66bb6a",
+    borderRadius: 10,
+  },
+  signupLink: {
+    marginTop: 16,
+    alignSelf: "center",
+  },
+  loadingContainer: {
+    marginVertical: 24,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  loadingText: {
+    marginTop: 12,
+    fontSize: 16,
+    color: "#2e7d32",
+    fontWeight: "600",
+    fontStyle: "italic",
+  },
+  guideCard: {
     width: "100%",
     backgroundColor: "#ffffff",
-    padding: 16,
-    borderRadius: 12,
+    borderRadius: 16,
     borderWidth: 1,
-    borderColor: "#c8e6c9",
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 1,
+    borderColor: "#aed581",
+    paddingBottom: 8,
   },
   guideTitle: {
-    fontWeight: "bold",
+    fontSize: 18,
     marginBottom: 10,
     color: "#2e7d32",
-    fontSize: 16,
+    fontWeight: "600",
   },
   guideText: {
     fontSize: 14,
-    color: "#555",
-    marginBottom: 6,
+    color: "#4e6e4e",
+    marginBottom: 4,
+  },
+  loadingAnimation: {
+    width: 150,
+    height: 150,
   },
 });
-
 

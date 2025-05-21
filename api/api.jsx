@@ -14,7 +14,7 @@ export function setAccessToken(token) {
  * Logs out the current user by clearing the access token.
  */
 export function logout() {
-  setAccessToken(null); // 清除 token
+  setAccessToken(null);
 }
 
 
@@ -113,7 +113,7 @@ export async function uploadAvatar(formData) {
   const res = await fetch("https://ecocache-backend-8618.onrender.com/api/upload-avatar/", {
     method: "POST",
     headers,
-    body: formData, // 不设置 Content-Type，浏览器自动带上 multipart/form-data
+    body: formData, 
   });
 
   if (!res.ok) {
@@ -123,5 +123,34 @@ export async function uploadAvatar(formData) {
 
   return res.json();
 }
+
+/**
+ * Updates user's profile (username, bio, and optionally profile picture).
+ * PATCH /api/userinfo/
+ *
+ * @param {FormData} formData - FormData containing 'username', 'bio', and optionally 'profile_picture'
+ * @returns {Promise<any>} - Updated user profile
+ */
+export async function updateProfile(formData) {
+  const token = ACCESS_TOKEN;
+
+  const headers = {
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+
+  const res = await fetch("https://ecocache-backend-8618.onrender.com/api/update-profile/", {
+    method: "PATCH",
+    headers,
+    body: formData,
+  });
+
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`Profile update failed: ${res.status} - ${errText}`);
+  }
+
+  return res.json();
+}
+
 
 

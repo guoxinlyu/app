@@ -75,7 +75,6 @@ export function startBLEScan(onMatch) {
  */
 export function stopBLEScan() {
   manager.stopDeviceScan();
-  manager.destroy();
 }
 
 // Default export as a fallback (not used directly in components)

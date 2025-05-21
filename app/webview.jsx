@@ -57,72 +57,112 @@ export default function BeaconWebView() {
   // Dynamically generated HTML content for the WebView
   const htmlContent = `
   <!DOCTYPE html>
-  <html>
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-      <title>${beacon.name}</title>
-      <style>
-        body {
-          margin: 0;
-          padding: 0;
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-          background: linear-gradient(to bottom right, #f0f4f8, #dbeafe);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          min-height: 100vh;
-        }
-        .card {
-          background: white;
-          border-radius: 16px;
-          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-          padding: 24px;
-          max-width: 90%;
-          width: 360px;
-          text-align: center;
-          animation: fadeIn 0.8s ease;
-        }
-        h1 {
-          font-size: 24px;
-          color: #1e3a8a;
-          margin-bottom: 12px;
-        }
-        p {
-          font-size: 16px;
-          color: #334155;
-          margin: 6px 0;
-        }
-        .beacon-id {
-          font-weight: bold;
-          font-size: 18px;
-          color: #2563eb;
-        }
-        img {
-          width: 80px;
-          height: 80px;
-          margin-bottom: 20px;
-          border-radius: 12px;
-          object-fit: contain;
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
+  <html lang="en">
+  <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>${beacon.name}</title>
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <style>
+  * {
+  box-sizing: border-box;
+  }
+  body {
+      margin: 0;
+      padding: 0;
+      font-family: Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(to bottom right, #e8f5e9, #bbdefb);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      width: 92%;
+      max-width: 420px;
+      padding: 24px 20px;
+      text-align: center;
+      transform: scale(0.95);
+      opacity: 0;
+      animation: fadeInScale 0.6s ease-out forwards;
+    }
+
+    @keyframes fadeInScale {
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .lottie {
+      margin-bottom: -10px;
+      margin-top: -10px;
+    }
+
+    .reward {
+      background: #e8f5e9;
+      color: #2e7d32;
+      padding: 10px 14px;
+      margin: 14px auto;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 16px;
+      display: inline-block;
+    }
+
+    img {
+    width: 180px;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 16px;
+    margin: 12px auto 18px auto; 
+    border: 4px solid #4caf50;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+    display: block;
+    }
+
+    h1 {
+      font-size: 24px;
+      color: #2e7d32;
+      margin: 12px 0 6px;
+    }
+
+    p {
+      font-size: 16px;
+      color: #37474f;
+      margin: 8px 0;
+    }
+
+    .beacon-id {
+      font-weight: 600;
+      color: #1e88e5;
+    }
+
+    .tagline {
+      font-weight: bold;
+      color: #43a047;
+      margin-top: 16px;
+      font-size: 16px;
+    }
       </style>
     </head>
-    <body>
-      <div class="card">
-        <img src="${imageUrl}" alt="Beacon Icon" />
-        <h1>${beacon.name}</h1>
-        <p class="beacon-id">ID: ${beacon.beacon_id}</p>
-        <p>${beacon.description}</p>
-        <p>📍 ${beacon.location}</p>
-        <p>🎯 GOOD JOB!</p>
-      </div>
-    </body>
+  <body>
+    <div class="card">
+    <img src="${imageUrl}" alt="Beacon" />
+    <div class="reward">🏆 +10 Eco Points</div>
+    <h1>${beacon.name}</h1>
+    <p class="beacon-id">ID: ${beacon.beacon_id}</p>
+    <p>${beacon.description}</p>
+    <p>📍 ${beacon.location}</p>
+    <p class="tagline">🎯 You just discovered a beacon!</p>
+    </div>
+  </body>
   </html>
-  `;
+`;
 
   return (
     <WebView

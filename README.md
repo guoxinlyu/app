@@ -16,10 +16,37 @@ Built with **React Native** and **Expo**, it offers a fun, interactive, and educ
 - 💥 Haptic feedback using `expo-haptics`
 - 🌐 WebView integration for displaying location content
 - 🧪 Jest testing support with `jest-expo`
-- checkbox
-- >npm install react-native-paper react-native-vector-icons
+- ✅ Custom UI built with `react-native-paper` and `react-native-vector-icons`
 
 ---
+
+## 📁 Project Structure
+App/
+├── app/ # App entry point with Expo Router pages
+│ ├── index.jsx # Home screen
+│ ├── map.jsx # Main map 
+│ ├── login.jsx # Login screen
+│ ├── signup.jsx # Signup screen
+│ ├── QRcodeScanner.jsx # QR scanner screen
+│ ├──_layout.jsx # Home screen
+│ ├── webview.jsx # Beacon screen
+│ ├── settings.jsx # Update user screen
+│ ├── bleService.jsx # BLE logic
+│ └── beacon/ # Dynamic route for scanned beacon
+│ └── [beaconId].jsx # Beacon detail page (Discoveries)
+|
+├── api/ # API calls (getBeacon, signIn, etc.)
+│ └── api.jsx # Authenticated endpoints (beacons, profile)
+│ └── auth.jsx # Sign in / sign up logic with JWT token handling
+|
+├── data/ # QRcode of beacons
+|
+├── assets/ # Images, icons, lottie animations
+│ └── animations/ # Lottie JSON files
+├── app.json # Expo project config
+├── package.json # Dependencies and scripts
+└── README.md # Project documentation
+
 
 ## ⚙️ Getting Started
 
@@ -38,7 +65,7 @@ This project supports native Android builds via **Expo Application Services (EAS
 
 You can install the latest build directly by visiting the following link:
 
-> [📦 Download Android APK](https://expo.dev/accounts/3181182997/projects/my-first-native-app/builds/ad5b82ee-d67e-413e-8583-d28a49ca3fa4)
+> [📦 Download Android APK](https://expo.dev/accounts/3181182997/projects/my-first-native-app/builds/c7e1a8c8-9374-4eb5-88e9-fb835d41a44e)
 
 1. Open the link on your Android phone
 2. Tap **"Download"** to save the `.apk` file
@@ -97,5 +124,10 @@ You may also need to manually allow these in Android system settings.
 - 🚫 **BLE features require physical devices**: Simulators/emulators do not support Bluetooth.
 - 📦 **No iOS build**: Requires Apple Developer credentials and EAS configuration (not included here).
 
+## 📚 References
 
+LottieFiles. (2024). *Animated confetti celebration*. Retrieved from https://app.lottiefiles.com/animation/126770eb-c18b-4a55-b7bd-0f3c1b260ad5
 
+LottieFiles. (2024). *Beacon pulse animation*. Retrieved from https://app.lottiefiles.com/animation/16e13955-b0ff-4192-9752-4a891b6777d4
+
+LottieFiles. (2024). *Nature eco badge animation*. Retrieved from https://app.lottiefiles.com/animation/9eee597d-e8b2-4980-af48-1e3b2fbe07fb

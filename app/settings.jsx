@@ -1,41 +1,69 @@
-// React and React Native imports
-import { useState, useEffect } from "react";
-import { View, Button, Image, StyleSheet, Alert, Text, ActivityIndicator } from "react-native";
+/**
+ * UploadAvatar - Profile editing screen for the EcoCache app.
+ * 
+ * Features:
+ * - Select and preview profile image
+ * - Update username, email, and bio
+ * - Upload all data via multipart/form-data to server
+ * - Snackbar feedback and navigation after success
+ */
 
-// Expo image picker for selecting images from the media library
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
+import {
+  Card,
+  Title,
+  Button,
+  ActivityIndicator,
+  Snackbar,
+  Avatar,
+  TextInput,
+  useTheme,
+} from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
-
-// API function to upload the avatar
-import { uploadAvatar } from "../api/api";
-
-// Navigation hooks from Expo Router
+import { updateProfile } from "../api/api";
 import { useRouter, useNavigation } from "expo-router";
 
 /**
- * UploadAvatar Screen – allows the user to pick an image from the gallery
- * and upload it as their new profile picture.
+ * UploadAvatar - A form UI allowing user to update their profile image and personal info.
  */
 export default function UploadAvatar() {
-  const [image, setImage] = useState(null);// Stores selected image URI
-  const [uploading, setUploading] = useState(false);// Upload progress indicator
-  const [hasPermission, setHasPermission] = useState(null);// Photo access permission state
+  /** Selected image URI */
+  const [image, setImage] = useState(null);
+
+  /** Text input states */
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [bio, setBio] = useState("");
+
+  /** Upload and permission states */
+  const [uploading, setUploading] = useState(false);
+  const [hasPermission, setHasPermission] = useState(null);
+
+  /** Snackbar feedback */
+  const [snackbar, setSnackbar] = useState({ visible: false, message: "" });
 
   const router = useRouter();
   const navigation = useNavigation();
+  const theme = useTheme();
 
   /**
-   * Request media library permission on component mount
+   * Request media library permission when component mounts.
    */
   useEffect(() => {
     (async () => {
       const { status } = await ImagePicker.getMediaLibraryPermissionsAsync();
       if (status !== "granted") {
-        // Request permission if not already granted
         const { status: askStatus } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         setHasPermission(askStatus === "granted");
 
         if (askStatus !== "granted") {
-          Alert.alert("Permission Denied", "Please enable photo access in your system settings.");
+          setSnackbar({ visible: true, message: "Please enable photo access in settings." });
         }
       } else {
         setHasPermission(true);
@@ -44,11 +72,11 @@ export default function UploadAvatar() {
   }, []);
 
   /**
-   * Opens the image picker and stores the selected image
+   * Launch image picker to select avatar photo.
    */
   const pickImage = async () => {
     if (!hasPermission) {
-      Alert.alert("Cannot Access Gallery", "Please grant permission first.");
+      setSnackbar({ visible: true, message: "Gallery access is required." });
       return;
     }
 
@@ -59,83 +87,200 @@ export default function UploadAvatar() {
         quality: 0.8,
       });
 
-      console.log("Image selected:", result);
-
       if (!result.canceled && result.assets.length > 0) {
-        setImage(result.assets[0].uri);// Save selected image URI
+        setImage(result.assets[0].uri);
       }
     } catch (error) {
-      Alert.alert("Error", "An error occurred while picking an image: " + error.message);
+      setSnackbar({ visible: true, message: "Error picking image." });
     }
   };
 
   /**
-   * Uploads the selected image to the server as the user's avatar
+   * Handle form submission: assemble FormData and send to backend.
    */
   const handleUpload = async () => {
-    if (!image) {
-      Alert.alert("No Image Selected", "Please select an image before uploading.");
+    if (!image && !username && !email && !bio) {
+      setSnackbar({ visible: true, message: "Please fill at least one field." });
       return;
     }
 
-    setUploading(true);// Show loading spinner
-
-    // Prepare image data as FormData for the backend
-    const formData = new FormData();
-    formData.append("avatar", {
-      uri: image,
-      name: "avatar.jpg",
-      type: "image/jpeg",
-    });
+    setUploading(true);
 
     try {
-      await uploadAvatar(formData);
-      Alert.alert("✅ Upload Successful", "Your avatar has been updated!");
-
-      // Go back or redirect to homepage
-      if (navigation.canGoBack()) {
-        navigation.goBack();
-      } else {
-        router.replace("/");
+      const formData = new FormData();
+      if (username) formData.append("username", username);
+      if (email) formData.append("email", email);
+      if (bio) formData.append("bio", bio);
+      if (image) {
+        formData.append("profile_picture", {
+          uri: image,
+          name: "avatar.jpg",
+          type: "image/jpeg",
+        });
       }
+
+      await updateProfile(formData);
+
+      setSnackbar({ visible: true, message: "Profile updated successfully!" });
+
+      // Navigate back or to home after success
+      setTimeout(() => {
+        if (navigation.canGoBack()) {
+          navigation.goBack();
+        } else {
+          router.replace("/");
+        }
+      }, 1200);
     } catch (err) {
-      Alert.alert("❌ Upload Failed", err.message);
-    } finally {
-      setUploading(false);// Hide loading spinner
+      const msg = err.message || "Update failed.";
+
+      if (msg.toLowerCase().includes("username") && msg.toLowerCase().includes("exist")) {
+        setSnackbar({ visible: true, message: "❌ Username already taken. Please choose another." });
+      } else if (msg.toLowerCase().includes("email") && msg.toLowerCase().includes("exist")) {
+        setSnackbar({ visible: true, message: "❌ Email already in use." });
+      } else {
+        setSnackbar({ visible: true, message: "❌ " + msg });
+      }
+    }
+    finally {
+      setUploading(false);
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Upload Avatar</Text>
-      <Button title="Choose Image" onPress={pickImage} />
-      {image && <Image source={{ uri: image }} style={styles.image} />}
-      {uploading ? (
-        <ActivityIndicator size="large" color="#4CAF50" style={{ marginTop: 20 }} />
-      ) : (
-        <Button title="Upload Avatar" onPress={handleUpload} color="#4CAF50" />
-      )}
-    </View>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      style={{ flex: 1 }}
+    >
+      <View style={styles.container}>
+        <Card style={styles.card} elevation={4}>
+          <Card.Content style={{ alignItems: "center" }}>
+            <Title style={styles.title}>🌿 Update Profile</Title>
+
+            {/* Avatar preview */}
+            <Avatar.Image
+              source={{
+                uri: image || "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+              }}
+              size={120}
+              style={styles.avatar}
+            />
+
+            {/* Pick image button */}
+            <Button
+              mode="outlined"
+              onPress={pickImage}
+              style={styles.outlinedButton}
+              icon="image"
+            >
+              Choose Image
+            </Button>
+
+            {/* Profile input fields */}
+            <TextInput
+              label="New Username"
+              mode="outlined"
+              value={username}
+              onChangeText={setUsername}
+              style={styles.input}
+              left={<TextInput.Icon icon="account" />}
+            />
+
+            <TextInput
+              label="New Email"
+              mode="outlined"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              style={styles.input}
+              left={<TextInput.Icon icon="email" />}
+            />
+
+            <TextInput
+              label="Bio"
+              mode="outlined"
+              value={bio}
+              onChangeText={setBio}
+              multiline
+              numberOfLines={3}
+              style={styles.input}
+              left={<TextInput.Icon icon="information" />}
+            />
+
+            {/* Upload button or loading spinner */}
+            {uploading ? (
+              <ActivityIndicator
+                animating={true}
+                size="large"
+                color={theme.colors.primary}
+                style={{ marginTop: 20 }}
+              />
+            ) : (
+              <Button
+                mode="contained"
+                onPress={handleUpload}
+                style={styles.uploadButton}
+                icon="upload"
+              >
+                Update Profile
+              </Button>
+            )}
+          </Card.Content>
+        </Card>
+
+        {/* Snackbar for messages */}
+        <Snackbar
+          visible={snackbar.visible}
+          onDismiss={() => setSnackbar({ visible: false, message: "" })}
+          duration={2500}
+          action={{ label: "OK", onPress: () => { } }}
+        >
+          {snackbar.message}
+        </Snackbar>
+      </View>
+    </KeyboardAvoidingView>
   );
 }
 
-// Styles for UploadAvatar screen
+/**
+ * Style definitions for the UploadAvatar screen
+ */
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    paddingTop: 80,
-    alignItems: "center",
-    backgroundColor: "#f0fdf4",
+    backgroundColor: "#f1f8e9",
+    flexGrow: 1,
+    padding: 20,
+    justifyContent: "center",
+  },
+  card: {
+    borderRadius: 16,
+    backgroundColor: "#ffffff",
+    paddingBottom: 20,
   },
   title: {
     fontSize: 22,
-    marginBottom: 20,
-    color: "#2e7d32",
+    color: "#1b5e20",
+    marginBottom: 16,
+    textAlign: "center",
   },
-  image: {
-    width: 160,
-    height: 160,
-    borderRadius: 80,
-    marginVertical: 20,
+  avatar: {
+    marginBottom: 16,
+  },
+  outlinedButton: {
+    marginBottom: 16,
+    borderColor: "#66bb6a",
+    borderWidth: 1.5,
+    borderRadius: 8,
+  },
+  input: {
+    width: "100%",
+    marginBottom: 12,
+    backgroundColor: "#f9fbe7",
+  },
+  uploadButton: {
+    marginTop: 10,
+    backgroundColor: "#66bb6a",
+    borderRadius: 10,
   },
 });
+
