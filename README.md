@@ -22,8 +22,7 @@ Built with **React Native** and **Expo**, it offers a fun, interactive, and educ
 
 ## 📁 Project Structure
 
-<details>
-<summary>Project Structure </summary>
+
 
 ```text
 App/
@@ -54,7 +53,7 @@ App/
 └── README.md                # Project documentation
 
  ```
-</details>
+
 
 ## ⚙️ Getting Started
 
