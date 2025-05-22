@@ -85,6 +85,9 @@ If you are reviewing this project, please log in to [https://expo.dev](https://e
 
 
 ▶️ **Run the App (Using Dev Client APK)**
+> ⚠️ **Important:** Before you start, make sure:
+> - Your Android device and computer are connected to the **same Wi-Fi network**
+> - You've already run `npx expo start` on your computer
 This project uses a custom Development Client built with **EAS** to support native modules like **BLE**.
 
 🖥 **On your Windows computer**
