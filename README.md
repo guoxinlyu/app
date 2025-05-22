@@ -21,32 +21,40 @@ Built with **React Native** and **Expo**, it offers a fun, interactive, and educ
 ---
 
 ## 📁 Project Structure
-App/
-├── app/ # App entry point with Expo Router pages
-│ ├── index.jsx # Home screen
-│ ├── map.jsx # Main map 
-│ ├── login.jsx # Login screen
-│ ├── signup.jsx # Signup screen
-│ ├── QRcodeScanner.jsx # QR scanner screen
-│ ├──_layout.jsx # Home screen
-│ ├── webview.jsx # Beacon screen
-│ ├── settings.jsx # Update user screen
-│ ├── bleService.jsx # BLE logic
-│ └── beacon/ # Dynamic route for scanned beacon
-│ └── [beaconId].jsx # Beacon detail page (Discoveries)
-|
-├── api/ # API calls (getBeacon, signIn, etc.)
-│ └── api.jsx # Authenticated endpoints (beacons, profile)
-│ └── auth.jsx # Sign in / sign up logic with JWT token handling
-|
-├── data/ # QRcode of beacons
-|
-├── assets/ # Images, icons, lottie animations
-│ └── animations/ # Lottie JSON files
-├── app.json # Expo project config
-├── package.json # Dependencies and scripts
-└── README.md # Project documentation
 
+<details>
+<summary>Project Structure </summary>
+
+```text
+App/
+├── app/                     # App entry point with Expo Router pages
+│   ├── index.jsx            # Home screen
+│   ├── map.jsx              # Main map 
+│   ├── login.jsx            # Login screen
+│   ├── signup.jsx           # Signup screen
+│   ├── QRcodeScanner.jsx    # QR scanner screen
+│   ├── _layout.jsx          # Layout page
+│   ├── webview.jsx          # Beacon screen
+│   ├── settings.jsx         # Update user screen
+│   ├── bleService.jsx       # BLE logic
+│   └── beacon/              # Dynamic route for scanned beacon
+│       └── [beaconId].jsx   # Beacon detail page (Discoveries)
+│
+├── api/                     # API calls (getBeacon, signIn, etc.)
+│   ├── api.jsx              # Authenticated endpoints (beacons, profile)
+│   └── auth.jsx             # Sign in / sign up logic with JWT token handling
+│
+├── data/                    # QRcode of beacons
+│
+├── assets/                  # Images, icons, lottie animations
+│   └── animations/          # Lottie JSON files
+│
+├── app.json                 # Expo project config
+├── package.json             # Dependencies and scripts
+└── README.md                # Project documentation
+
+ ```
+</details>
 
 ## ⚙️ Getting Started
 
@@ -124,4 +132,5 @@ LottieFiles. (2024). *Animated confetti celebration*. Retrieved from https://app
 LottieFiles. (2024). *Beacon pulse animation*. Retrieved from https://app.lottiefiles.com/animation/16e13955-b0ff-4192-9752-4a891b6777d4
 
 LottieFiles. (2024). *Nature eco badge animation*. Retrieved from https://app.lottiefiles.com/animation/9eee597d-e8b2-4980-af48-1e3b2fbe07fb
+
 
