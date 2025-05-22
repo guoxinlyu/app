@@ -61,27 +61,20 @@ npm install
 
 This project supports native Android builds via **Expo Application Services (EAS)**.
 
-### 🔽 Download Latest APK
+### 🔽 Download Android APK
 
-You can install the latest build directly by visiting the following link:
+> ⚠️ **Note:** Due to Expo’s current permissions system, downloading this APK requires logging in with an Expo account.
 
-> [📦 Download Android APK](https://expo.dev/accounts/3181182997/projects/my-first-native-app/builds/c7e1a8c8-9374-4eb5-88e9-fb835d41a44e)
+If you are reviewing this project, please log in to [https://expo.dev](https://expo.dev) using the credentials below to access the build:
 
-1. Open the link on your Android phone
-2. Tap **"Download"** to save the `.apk` file
-3. Open the file to install it
+- **Expo Account ID:** `3181182997`  
+- **Password:** `laolvzi123`
 
-> ⚠️ **Note**: You may need to enable _"Install from unknown sources"_ in your device settings to install the app.
+👉 After login, go to the following build link:
 
----
+[📦 Click here to Download the Android APK](https://expo.dev/accounts/3181182997/projects/my-first-native-app/builds/c7e1a8c8-9374-4eb5-88e9-fb835d41a44e)
 
-### 🔐 Expo Account Access (optional)
-
-If you need to access additional build details or future builds, please log in to [https://expo.dev](https://expo.dev) with the appropriate Expo account.
-
-- **Account ID**: `3181182997`
-- **PassWord**:`laolvzi123`
-
+> 📅 **Click "Install" on that page to download the APK built on May 17th.**
 
 
 ▶️ **Run the App (Using Dev Client APK)**
@@ -131,3 +124,4 @@ LottieFiles. (2024). *Animated confetti celebration*. Retrieved from https://app
 LottieFiles. (2024). *Beacon pulse animation*. Retrieved from https://app.lottiefiles.com/animation/16e13955-b0ff-4192-9752-4a891b6777d4
 
 LottieFiles. (2024). *Nature eco badge animation*. Retrieved from https://app.lottiefiles.com/animation/9eee597d-e8b2-4980-af48-1e3b2fbe07fb
+
